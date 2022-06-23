@@ -37,10 +37,10 @@ public class TempAdminService {
         return applyDAO.read(num);
     }
 
-    // 프로젝트 참가자 정보 수정(완수여부)
-    public boolean update(Long approach, Long userNum){
-        return applyDAO.update(approach, userNum);
-    }
+//    // 프로젝트 참가자 정보 수정(완수여부)
+//    public boolean update(Long approach, Long userNum){
+//        return applyDAO.(approach, userNum);
+//    }
 
 
     // userDAO

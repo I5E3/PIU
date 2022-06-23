@@ -13,6 +13,39 @@
         FROM TBL_APPLY app
         WHERE app.PROJECT_NUM = #{projectNum}
     </select>
+
+
+    <!-- 프로젝트 지원   -->
+    <insert id="applyProject">
+        INSERT INTO TBL_APPLY
+        (NUM, REGIST_DATE, PROJECT_NUM, USER_NUM)
+        VALUES(SEQ_APPLY.NEXTVAL, SYSDATE, #{projectNum}, #{userNum})
+    </insert>
+
+    <!-- 지원한 유저 목록   -->
+    <select id="getApplyUser" resultType="applyDTO">
+        SELECT ta.NUM, ta.APPROACH, ta.REGIST_DATE, ta.PROJECT_NUM, ta.USER_NUM ,ta.START_TIME, ta.END_TIME, tu.NICKNAME, tu.PHONE
+        FROM TBL_APPLY ta
+        INNER JOIN TBL_USER tu
+        ON ta.USER_NUM = tu.NUM
+        WHERE ta.USER_NUM  = #{userNum}
+    </select>
+
+    <!-- 유저 플로깅 시작  -->
+    <update id="userStart">
+        UPDATE TBL_APPLY
+        SET APPROACH='1', START_TIME= SYSDATE
+        WHERE USER_NUM = #{userNum} AND PROJECT_NUM = #{projectNum}
+    </update>
+
+    <!-- 유저 플로깅 종료   -->
+    <update id="userEnd">
+        UPDATE TBL_APPLY
+        SET APPROACH='2', END_TIME = SYSDATE
+        WHERE USER_NUM = #{userNum} AND PROJECT_NUM = #{projectNum}
+    </update>
+
+
 </mapper>
 
 

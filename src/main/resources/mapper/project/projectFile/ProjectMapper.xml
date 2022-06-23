@@ -30,11 +30,19 @@
     </select>
 
 
+<!--    &lt;!&ndash; 프로젝트 등록  &ndash;&gt;-->
+<!--    <insert id="insert" parameterType="projectVO">-->
+<!--    INSERT INTO TBL_PROJECT-->
+<!--    (NUM, TITLE, CONTENT, COURSE, TERRAIN, POINT, APPROVAL, START_ADDRESS, END_ADDRESS, DISTANCE, REGIST_DATE, UPDATE_DATE, STATUS, COMPANY_NUM, JJIM_COUNT, PROJECT_DATE, COMPANY_COMMENT, SUMMARY)-->
+<!--    VALUES(SEQ_PROJECT.NEXTVAL, #{title}, #{content}, #{course}, #{terrain}, #{point}, '0', #{startAddress}, #{endAddress}, #{distance}, SYSDATE, SYSDATE, '1' , #{companyNum}, NULL, #{projectDate}, #{companyComment}, #{summary})-->
+<!--    </insert>-->
+
+
     <!-- 프로젝트 등록  -->
     <insert id="insert" parameterType="projectVO">
     INSERT INTO TBL_PROJECT
-    (NUM, TITLE, CONTENT, COURSE, TERRAIN, POINT, APPROVAL, START_ADDRESS, END_ADDRESS, DISTANCE, QR, REGIST_DATE, UPDATE_DATE, STATUS, COMPANY_NUM, JJIM_COUNT, PROJECT_DATE, COMPANY_COMMENT, SUMMARY)
-    VALUES(SEQ_PROJECT.NEXTVAL, #{title}, #{content}, #{course}, #{terrain}, #{point}, '0', #{startAddress}, #{endAddress}, #{distance}, NULL, SYSDATE, SYSDATE, '1' , #{companyNum}, NULL, #{projectDate}, #{companyComment}, #{summary})
+    (NUM, TITLE, CONTENT, COURSE, TERRAIN, POINT, APPROVAL, START_ADDRESS, REGIST_DATE, UPDATE_DATE, STATUS)
+    VALUES(SEQ_PROJECT.NEXTVAL, #{title}, #{content}, #{course}, #{terrain}, #{point}, '0', #{startAddress}, SYSDATE, SYSDATE, '1' )
     </insert>
 
 

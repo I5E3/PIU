@@ -37,4 +37,9 @@ public class CompanyDAO {
     public CompanyVO login(String email, String password){
         return companyMapper.login(email,password);
     }
+
+    // 회원 정보 수정
+    public void update(CompanyVO companyVO){
+        companyMapper.update(companyVO);
+    }
 }

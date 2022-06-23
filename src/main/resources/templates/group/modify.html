@@ -273,9 +273,9 @@
                 </div>                   
                 </div>
                 <!-- 우측 메인내용 -->
-                <div class="groupPageModifyFrame">
+                <div class="groupPageModifyFrame" th:object="${company}">
                     <div class="groupPageModifyFrameMain">
-                        <form method="post" action="/group/modifyGroupProfileMain">
+                        <form method="post" action="/group/modifyForm">
                             <div class="groupPageModifyFormFrame">
                                 <div class="groupPageModifyTitleWrapper">
                                 <div class="groupPageModifyTitleFrame">
@@ -285,42 +285,38 @@
                                         <div class="groupPageModifyCategoryDetail"><a href='javascript:void(0);' class="aaa2">기업 정보</a></div>
                                     </div>
                                     <div style="margin-bottom: 20px;"></div>
-                                    <h3>기업 정보</h3>
+                                    <h3>단체 정보</h3>
                                     <div style="margin-bottom: 4px;"></div>
-                                    <div class="groupPageModifyTitleLaw">프로젝트가 평생교육과정에 편입되기 위해서는 아래 정보가 필요합니다.<br>(수집근거: 평생교육법 제18조)</div>
+                                    <div class="groupPageModifyTitleLaw">단체 정보는 하단의 내용만 수정이 가능합니다</div>
                                 </div>
                                 </div>
                                 <div class="groupPageModifyFormWrapper">
                                 <div class="groupPageModifyFormWrapper2">
-                                    <div class="tableWrapper">
-                                        <div class="tableTitle">회사이메일</div>
-                                        <div class="tableContent">
-                                            <input type="text" class="tableContentDetail"></intput>
-                                        </div>
-                                    </div>
                                     <div class="groupPageFormDivide"></div>
                                     <div class="tableWrapper">
                                         <div class="tableTitle">담당자 전화번호</div>
                                         <div class="tableContent">
-                                            <input type="text" class="tableContentDetail"></intput>
+                                            <input type="text" class="tableContentDetail" th:value="*{phone}" name="phone"></intput>
                                         </div>
                                     </div>
                                     <div class="groupPageFormDivide"></div>
                                     <div class="tableWrapper">
                                         <div class="tableTitle">기업 공식 전화번호</div>
                                         <div class="tableContent">
-                                            <input type="text" class="tableContentDetail"></intput>
+                                            <input type="text" class="tableContentDetail" th:value="*{businessPhone}" name="businessPhone"></intput>
                                         </div>
                                     </div>
                                     <div class="groupPageFormDivide"></div>
                                     <div class="tableWrapper">
                                         <div class="tableTitle">회사주소</div>
                                         <div class="tableContent">
-                                            <input type="text" class="tableContentDetail"></intput>
+                                            <input type="text" class="tableContentDetail" th:value="*{address}" name="address"></intput>
+                                            <input type="text" class="tableContentDetail" style="margin-top: 10px;" th:value="*{addressDetail}" name="addressDetail"></intput>
                                         </div>
                                     </div>
                                     <div class="groupPageFormDivide"></div>
-                                    <input type="submit" class="groupPageModifySubmitButton">
+                                    <!-- 유효성 검사  -->
+                                    <input type="button" class="groupPageModifySubmitButton" id="submitBtn" value="제출"></input>
                                 </div>
                                 </div>
                             </div>
@@ -333,4 +329,13 @@
         </div>
     </div>    
 </body>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script>
+
+//    $('#submitBtn').on("click", function () {
+//        $('input[type="text"]');
+//
+//    })
+</script>
+
 </html>

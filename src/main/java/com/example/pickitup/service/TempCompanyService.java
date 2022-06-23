@@ -41,6 +41,8 @@ public class TempCompanyService {
         return companyDAO.remove(num);
     }
 
+
+
     public CompanyVO loginCompany(String email, String password){
         return companyDAO.login(email,password);
     }
@@ -84,6 +86,11 @@ public class TempCompanyService {
     // 리뷰 상세보기
     public ProjectReviewVO read(Long num){
         return projectReviewDAO.read(num);
+    }
+
+    // 단체 정보 수정
+    public void update(CompanyVO companyVO){
+        companyDAO.update(companyVO);
     }
 
 

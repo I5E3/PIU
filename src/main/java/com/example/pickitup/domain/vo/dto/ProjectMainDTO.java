@@ -15,7 +15,10 @@ public class ProjectMainDTO {
     private Long jjimCount;
     private String projectDate;
     private Long applyCount;
+    private String companyName;
 
+
+    // 병현
     public ProjectMainDTO(String title, String terrain, Long point, Long jjimCount, String projectDate, Long applyCount) {
         this.title = title;
         this.terrain = terrain;
@@ -23,6 +26,12 @@ public class ProjectMainDTO {
         this.jjimCount = jjimCount;
         this.projectDate= projectDate;
         this.applyCount = applyCount;
+    }
+
+    // 민성
+    public ProjectMainDTO(String companyName){
+        this.companyName = companyName;
+
     }
 
 }

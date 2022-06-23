@@ -101,12 +101,8 @@ public class ProjectService {
         jjimDAO.remove(jjimVO);
     }
 
-    // 프로젝트 지원
-    public void apply(ApplyVO applyVO){
-        applyDAO.register(applyVO);
-    }
 
-    // 프로젝트 참가자 상태 변경
+
 
 
 //
