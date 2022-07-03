@@ -1,6 +1,5 @@
 package com.example.pickitup.mapper.project.projectFile;
 
-import com.example.pickitup.domain.vo.Criteria;
 import com.example.pickitup.domain.vo.ProjectCriteria;
 import com.example.pickitup.domain.vo.dto.ProjectDTO;
 import com.example.pickitup.domain.vo.project.projectFile.ProjectVO;
