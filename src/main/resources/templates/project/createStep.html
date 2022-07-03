@@ -96,26 +96,26 @@
                                     됩니다.<br>( 산 : +100p, 바닷가 : +50p, 3km까지 100p 3km 초과 시 1km 마다 50p 추가 )
                                 </div>
 
-                                <div class="formTerrain">
-                                    <label class="formTerrainLabel">지형</label>
-                                    <select class="formTerrainSelect" name="terrain">
-                                        <option value hidden disalbed>지형을 입력해주세요.</option>
-                                        <option class="mountain" value="mountain">산 ( +100p )</option>
-                                        <option class="beach" value="beach">바닷가 ( + 50p )</option>
-                                        <option class="ground" value="ground">평지</option>
-                                    </select>
-                                </div>
-                                <label class="startTimeLabel">시작일자</label>
-                                <input type="datetime-local" class="startTime" name="startTime">
-                                <label class="endTimeLabel">종료일자</label>
-                                <input type="datetime-local" class="endTime" name="endTime">
+                                    <div class="formTerrain">
+                                        <label class="formTerrainLabel">지형</label>
+                                        <select class="formTerrainSelect" name="terrain">
+                                            <option value hidden disalbed>지형을 입력해주세요.</option>
+                                            <option class="mountain" value="1">산 ( +100p )</option>
+                                            <option class="beach" value="2">바닷가 ( + 50p )</option>
+                                            <option class="ground" value="3">평지</option>
+                                        </select>
+                                    </div>
+                                    <label class="startTimeLabel">시작일자</label>
+                                    <input type="datetime-local" class="startTime" name="startTime">
+                                    <label class="endTimeLabel">종료일자</label>
+                                    <input type="datetime-local" class="endTime" name="endTime">
                                 <div class="formCourse">
                                     <label class="formCourseLabel">코스 / 장소</label>
                                     <div class="formCoureSelectBox">
                                         <select class="formCourseSelect" id="selectCourse" onchange="changeValue()"
                                                 name="course">
-                                            <option value="place">장소</option>
-                                            <option value="course">코스 ( 3km까지 100p 3km 초과 시 1km 마다 50p 추가 )</option>
+                                            <option value="L">장소</option>
+                                            <option value="C">코스 ( 3km까지 100p 3km 초과 시 1km 마다 50p 추가 )</option>
                                         </select>
                                         <div class="addressBox">
                                             <label class="formCourseLabel">출발지</label>
@@ -126,7 +126,7 @@
                                                        value="주소 찾기">
                                             </div>
                                             <div style="width: 100%;">
-                                                <div style="width: 62%;">
+                                                <div style="width: 71%;">
                                                     <input type="text" id="start_addressDetail" placeholder="상세주소"
                                                            name="startAddressDetail">
                                                 </div>
@@ -145,7 +145,7 @@
                                                        value="주소 찾기">
                                             </div>
                                             <div style="width: 100%;">
-                                                <div style="width: 62%;">
+                                                <div style="width: 71%;">
                                                     <input type="text" id="end_addressDetail" placeholder="상세주소"
                                                            name="endAddressDetail">
                                                 </div>
@@ -154,7 +154,7 @@
 
                                         <div
                                                 style="width: 100%; margin-top: 10px; margin-bottom: 60px; font-size: 15px;     font-family: 'Noto Sans KR', sans-serif;">
-                                            <div style="width: 62%; display: flex; justify-content: space-between;">
+                                            <div style="width: 71%; display: flex; justify-content: space-between;">
                                                 <div>예상 지급 포인트</div>
                                                 <div style="display: flex;">
                                                     <p style="margin: 0;" id="distance_point"></p>P
@@ -171,8 +171,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="mapBox">
-                    <div id="map" style="width:500px;height:500px;"></div></div>
+                <div id="map" style="width:500px;height:500px;"></div>
                 <div class="nextBtnFrame">
                     <button type="button" class="nextPage step2">
                         <span class="nextPageBtn">다음</span>
@@ -217,7 +216,7 @@
                                                         <span class="subImgExamContainer">
                                                             <picture class="subImgExamItem">
                                                                 <img src="/src/main/resources/static/images/cover-04.jpg"
-                                                                     class="coverImg" style="max-width: 100%; height: auto;">
+                                                                      class="coverImg" style="max-width: 100%; height: auto;">
                                                             </picture>
                                                         </span>
                                                 </div>
@@ -267,7 +266,7 @@
                                     <label class="subImgTitle">프로젝트 상세내용 </label>
                                     <div>
                                             <textarea class="groupTextInput" name="content"
-                                                      placeholder="참가자들에게 안내해줄 사항 및 프로젝트 진행 상세에 대해 기재해주세요"></textarea>
+                                                      placeholder="프로젝트의 상세내용을 기재해주세요"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -359,9 +358,9 @@
                             <h3 class="cpGroupIntroTitle">단체를 소개해 주세요</h3>
                             <div class="groupIntroProfileFrame">
                                 <label class="groupIntroProfileTitle">프로필</label>
-                                <!--                                <input type="hidden" name="companyNum" th:value="${company.num}">-->
                                 <!-- 프로필 사진 -->
-                                <img th:src="@{/groupFile/display?fileName=} + ${company.profileUploadPath} + @{/} + ${company.profileFileName}" alt="" class="group"></div>
+                                <img src="/src/main/resources/static/images/chun2.png" class="profileImage" alt="">
+                            </div>
                             </label>
                         </div>
                         <div class="introGroupTextFrame">
@@ -402,7 +401,13 @@
                                 <div class="cpCheckBoxFrame">
                                     <label class="cpCheckBoxForm">
                                         <div class="cpCheckBoxContainer">
-                                            <input name="cpCheckBox1" type="checkbox" class="cpCheckBox1" required>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                 fill="none" viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                      d="M20 20H4V4h16v16zM4 2c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H4z"
+                                                      fill="#1B1C1D"></path>
+                                            </svg>
+                                            <input name="cpCheckBox1" type="checkbox" class="cpCheckBox1">
                                         </div>
                                         <span class="cpCheckBoxInfo1">네, 모두 잘 적었어요.</span>
                                     </label>
@@ -424,8 +429,8 @@
                                 <div class="cpCheckBoxFrame">
                                     <label class="cpCheckBoxForm">
                                         <div class="cpCheckBoxContainer">
-
-                                            <input name="cpCheckBox2" type="checkbox" class="cpCheckBox1" required>
+                                           
+                                            <input name="cpCheckBox2" type="checkbox" class="cpCheckBox1">
                                         </div>
                                         <span class="cpCheckBoxInfo2">네, 모두 잘 적었어요.</span>
                                     </label>
@@ -443,7 +448,7 @@
                                     <label class="cpCheckBoxForm">
                                         <div class="cpCheckBoxContainer">
 
-                                            <input name="cpCheckBox3" type="checkbox" class="cpCheckBox1" required>
+                                            <input name="cpCheckBox3" type="checkbox" class="cpCheckBox1">
                                         </div>
                                         <span class="cpCheckBoxInfo3">네, 모두 잘 적었어요.</span>
                                     </label>
@@ -482,44 +487,6 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8460d42f853294e33918a26eaad645a2&libraries=services"></script>
 
 <script>
-
-
-    // 사진
-    //첨부파일 input태그 가져오기
-    const file0 = document.querySelector("input.attach");
-    const file1 = document.querySelector("input.attach1");
-    const file2 = document.querySelector("input.attach2");
-    const file3 = document.querySelector("input.attach3");
-    const thumbnail1 = document.querySelector(".photoImgFrame");
-    // const thumbnail2 = document.querySelector("label[for='attach2'] div.thumb2");
-    // const thumbnail3 = document.querySelector("label[for='attach3'] div.thumb3");
-
-    file0.on("change", function(event){
-        //특정 경로의 파일을 읽어올 때 사용.
-        let reader = new FileReader();
-        reader.readAsDataURL(event.target.files[0]);
-        reader.onload = function(event){
-            //등록된 파일의 경로에 작성된 파일의 타입검사
-            if(event.target.result.includes("image")){
-                console.log("이미지 파일입니다.");
-                $(thumbnail1).text("");
-                //등록된 파일의 경로로 대체
-                thumbnail1.style.backgroundImage = "url(\"" + event.target.result + "\")";
-                file2.disabled = false;
-                $(thumbnail2).css("background-color","white");
-                number2()
-            }else{
-                alert("이미지 파일이 아닙니다.");
-                //미리 준비해놓은 이미지 경로로 대체
-                $(thumbnail1).text("");
-                thumbnail1.style.backgroundImage = "url(/images/error.png)";
-            }
-        }
-    });
-
-
-
-    // 페이지 이동 css
     let step = "1";
     $('.prevPage').on("click", function () {
         step--;
@@ -583,8 +550,7 @@
     })
 
 
-    // 코스, 장소 선택
-    let endAddress = document.querySelector(".addressBoxEnd");
+        let endAddress = document.querySelector(".addressBoxEnd");
     function changeValue() {
         let selectCourse = document.getElementById("selectCourse");
         selectCourse = selectCourse.options[selectCourse.selectedIndex].value;
@@ -596,7 +562,6 @@
         }
     }
 
-    // 카카오톡 도착 input 추가
     window.onload = function () {
         document.getElementById("find_start_address").addEventListener("click", function () { //주소입력칸을 클릭하면
             //카카오 지도 발생
@@ -619,7 +584,6 @@
 
     }
 
-    // 포인트 계산
     let 출발 = [];
     let 도착 = [];
     let default_point = 100;
@@ -732,9 +696,6 @@
                 }
                 if ((출발.length + 도착.length) == 4) {
                     // 지도 생성 시킬것
-
-                    $('#map').remove();
-                    $('#mapBox').append("<div id=\"map\" style=\"width:500px;height:500px;\"></div>");
                     getMap($('#y1').val(), $('#x1').val(), $('#y2').val(), $('#x2').val());
                     dist();
                 }
@@ -833,7 +794,7 @@
 
 
     // 사진 등록
-    $(".submitPageBtn").on("click", function (e) {
+    $("input[type='file']").on("change", function (e) {
         let formData =   new FormData();
         let inputFile = $("input[name='uploadFiles']");
         for(let i=0; i<inputFile.length; i++){
@@ -841,7 +802,7 @@
                 formData.append("uploadFiles", inputFile[i].files[0]);
                 console.log(inputFile[i].files[0]);
             }
-        }
+        };
         $.ajax({
             url: "/projectFile/upload",
             type: "post",
@@ -861,7 +822,7 @@
                     $('#img' + i).attr("src", "/projectFile/display?fileName=" + file.uploadPath + "/" + file.uuid + "_" + file.fileName);
                 });
                 $('.imgInsertForm').append(str);
-                $
+
             }
         });
     });
@@ -893,6 +854,7 @@
     });
 
 
+    $('input')
 </script>
 
 </html>

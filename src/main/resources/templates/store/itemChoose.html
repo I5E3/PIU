@@ -14,7 +14,7 @@
 <!--헤더 -->
 <div th:replace="~{/main/Header :: HeaderImport}"></div>
 <!--헤더 -->
-<form action="/store/payment" method="post">
+<form action="/store/payment" method="post" id="gogo">
     <div class="item_choose_main" th:object="${product}">
         <div class="item_select">
             <div class="space"></div>
@@ -34,7 +34,7 @@
             <div class="space"></div>
             <div class="item_amount flex" style="display: flex; position: relative; justify-content: center;">
                 <button type="button" class="amount_btn minus" style="left: 2%;">-</button>
-                <input class="item_amount_input" type="text" value="1" placeholder="1" readonly>
+                <input id="count" class="item_amount_input" type="text" value="1" placeholder="1" readonly>
                 <button type="button" class="amount_btn plus" style="right: 2%;">+</button>
             </div>
             <div class="space_line"></div>
@@ -44,13 +44,25 @@
             <!-- 결제하기 html로 쏴주기 -->
 
             <div class="flex" style="justify-content: space-between;">
+                <div>보유 포인트</div>
+                <div class="pay_point flex"> <p class="my-points" th:text="|${user.getPoint}P|"></p></div>
+                <input type="hidden" >
+            </div>
+
+            <div class="flex" style="justify-content: space-between;">
                 <div>총 결제 포인트</div>
                 <div class="pay_point flex"> <p class="total_price" th:text="|*{price}|">P</p></div>
                 <input type="hidden" name="ogprice" th:value="*{price}">
                 <input name="totalitems" type="hidden">
                 <input name="totalpayment" type="hidden">
             </div>
-            <div style="width: 100%;"> <button class="toBuy goPayment" type="submit" >결제 하기 </button></div>
+            <div class="flex" style="justify-content: space-between;">
+                <div>잔여 포인트</div>
+                <div class="pay_point flex"> <p class="remain-points" name="remain-points" ></p></div>
+                <input type="hidden">
+            </div>
+
+            <div style="width: 100%;"> <button class="toBuy goPayment" type="button" onclick="goNext()" >결제 하기 </button></div>
 
         </div>
     </div>
@@ -69,6 +81,10 @@
 
 <script th:inline="javascript">
     let productNum = [[${product.num}]];
+    let price = [[${product.price}]];
+    let upoint = [[${user.point}]];
+    let remainpoint = [[${user.getPoint}-${product.price}]];
+    let count;
 
     //scroll top
     $('.toTop').click(function(){
@@ -80,7 +96,7 @@
         url: "/productFile/list/"+productNum,
         type : "get",
         success : function (files) {
-            let str = "<img src='/productFile/display?fileName=" + files[0].uploadPath + "/s_" + files[0].uuid + "_"  + files[0].fileName + "'>";
+            let str = "<img src='/productFile/display?fileName=" + files[0].uploadPath + "/" + files[0].uuid + "_"  + files[0].fileName + "'>";
             $(".item_img").html(str);
             // $("img#"+productNum).attr("src", "/upload/display?fileName=" + files[0].uploadPath + "/s_" + files[0].uuid + "_"  + files[0].fileName )
         }
@@ -93,6 +109,10 @@
     $('.total_price').text($amount*$item_price + "P");  //700 대신 상품 가격입력
     $('input[name="totalitems"]').val($amount);
     $('input[name="totalpayment"]').val($amount*$item_price);
+    let result = upoint - $amount*$item_price;
+
+    $('.remain-points').text(result+'P');
+    $('.remain-points').css("color","#1F89FF");
 
     //+,- 수량 버튼 클릭시 총 포인트 계산 및  input에 넣어서 넘길준비
     $oper.click(function(){
@@ -103,6 +123,8 @@
                 $('.total_price').empty().text($amount*$item_price + "P");
                 $('input[name="totalitems"]').val($amount);
                 $('input[name="totalpayment"]').val($amount*$item_price);
+                result = upoint - $amount*$item_price;
+                $('.remain-points').text(result+'P');
             }
         }else if($(this).hasClass('plus')){
             $('.item_amount_input').attr("value",$amount+1);
@@ -110,8 +132,98 @@
             $('.total_price').empty().text($amount*$item_price + "P");
             $('input[name="totalitems"]').val($amount);
             $('input[name="totalpayment"]').val($amount*$item_price);
+            result = upoint - $amount*$item_price;
+            $('.remain-points').text(result+'P');
         }
     })
+
+
+</script>
+
+<script th:inline="javascript">
+    // var count = 1;
+
+    let url = [[${url}]];
+
+    if(url == "store") {
+        $('.nav-container').css("display", "none");
+        $('.menu-plogging').css("color", "black");
+        $('.menu-store').css("color","#1F89FF");
+    }
+
+
+    $(document).ready(function() {
+        count = document.getElementById('count').value;
+        if(upoint < price * count) {
+            $(".total_price").css("color","red");
+            $('.toBuy').css({'background':'gray', 'cursor':'not-allowed'});
+            $('.toBuy').attr("disabled", "disabled");
+        } else {
+            $(".total_price").css("color","black");
+            $('.toBuy').css({'background':'#005bed', 'cursor':'pointer'});
+            $('.toBuy').removeAttr("disabled");
+            $(".goPayment").on("click",function () {
+                $("#gogo").submit();
+            });
+        }
+    });
+
+
+
+    $('.amount_btn').on("click",function () {
+        count = document.getElementById('count').value;
+        if(upoint < price * count) {
+            $(".total_price").css("color","red");
+            $('.toBuy').css({'background':'gray', 'cursor':'not-allowed'});
+            $('.toBuy').attr("disabled", "disabled");
+        } else {
+            $(".total_price").css("color","black");
+            $('.toBuy').css({'background':'#005bed', 'cursor':'pointer'});
+            $('.toBuy').removeAttr("disabled");
+            $(".goPayment").on("click",function () {
+                $("#gogo").submit();
+            })
+        }
+        if (result < 0){
+            $('.remain-points').css("color", "red");
+        } else if (result >= 0){
+            $('.remain-points').css("color", "#1F89FF");
+        }
+    })
+
+
+    // if (price > upoint) {
+    //     $(".total_price").css("color","red");
+    // } else {
+    //     $(".total_price").css("color","black");
+    // }
+    //  $(".plus").on("click", function () {
+    //      count = count +1;
+    //      console.log(count);
+    //      if (price * count > upoint) {
+    //          $(".total_price").css("color","red");
+    //      } else {
+    //          $(".total_price").css("color","black");
+    //      }
+    //  })
+    // $(".minus").on("click", function () {
+    //     count = count - 1;
+    //     if(count <= 1){
+    //         count = 1;
+    //     }
+    //     console.log(count);
+    //     if (price * count > upoint) {
+    //         $(".total_price").css("color","red");
+    //     } else {
+    //         $(".total_price").css("color","black");
+    //     }
+    // })
+    //
+    $(".goPayment").on("click",function () {
+        $("#gogo").submit();
+    })
+    //  })
+
 
 
 </script>

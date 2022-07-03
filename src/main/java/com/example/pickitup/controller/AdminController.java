@@ -10,24 +10,17 @@ import com.example.pickitup.domain.vo.dto.PageDTO;
 import com.example.pickitup.domain.vo.dto.ProductPageDTO;
 import com.example.pickitup.domain.vo.project.projectFile.ProjectVO;
 import com.example.pickitup.domain.vo.user.AdminBoardVO;
+import com.example.pickitup.domain.vo.user.OrderVO;
 import com.example.pickitup.domain.vo.user.UserVO;
-import com.example.pickitup.domain.vo.*;
 import com.example.pickitup.domain.vo.adminVO.AdminBoardDTO;
-import com.example.pickitup.domain.vo.dto.*;
-import com.example.pickitup.domain.vo.dto.AdminBoardPageDTO;
-import com.example.pickitup.domain.vo.dto.PageDTO;
-import com.example.pickitup.domain.vo.dto.ProductPageDTO;
 import com.example.pickitup.domain.vo.product.productFile.ProductVO;
 import com.example.pickitup.domain.vo.dto.UserDTO;
-import com.example.pickitup.domain.vo.project.projectQna.ProjectQnaCommentVO;
-import com.example.pickitup.domain.vo.user.AdminBoardVO;
 import com.example.pickitup.service.TempAdminService;
-import com.example.pickitup.service.TempCompanyService;
+import com.example.pickitup.service.CompanyService;
 import com.example.pickitup.service.AdminProductService;
 import com.example.pickitup.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.javassist.Loader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,12 +33,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Controller
 @Slf4j
@@ -54,7 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AdminController {
     private final TempAdminService tempAdminService;
     private final AdminProductService adminProductService;
-    private final TempCompanyService tempCompanyService;
+    private final CompanyService companyService;
     private final TempUserSerivce tempUserSerivce;
     private final ProjectService projectService;
     // 관리자 로그인
@@ -71,18 +60,20 @@ public class AdminController {
         model.addAttribute("ipV4",request.getRemoteAddr());
     }
 
-
     @PostMapping("/qrEndLogin")
-    public void qrEndCheck(String email, String password,HttpServletRequest request,Model model){
+    public String qrEndCheck(String email, String password,HttpServletRequest request,Model model){
 
         // 이메일과 비밀번호를 통해 userDTO를 불러옴
-        UserDTO userDTO=tempUserSerivce.loginUser(email, password);
+        UserDTO userDTO = tempUserSerivce.loginUser(email, password);
 
         Long userNum = userDTO.getNum();
 
         log.info("============="+userNum);
 
         QrDTO qrDTO = tempUserSerivce.getQrInfo(userNum);
+        if(qrDTO.getApproach().equals("4")){
+            return "/admin/wrong";
+        }
 
         log.info(qrDTO.getUserNum() + "===================");
         log.info(qrDTO.getProjectApproval() + "===================");
@@ -92,7 +83,7 @@ public class AdminController {
         log.info(qrDTO.getEndQr() + "===================");
         log.info(qrDTO.getStartQr() + "===================");
         log.info(qrDTO.getApplyNum() + "===================");
-            // DTO에서 필요한 정보들을 빼냄
+        // DTO에서 필요한 정보들을 빼냄
         Long applyNum = qrDTO.getApplyNum();
         int user_point=Integer.parseInt(qrDTO.getUserPoint());
         int add_point=Integer.parseInt(qrDTO.getAddPoint());
@@ -104,11 +95,16 @@ public class AdminController {
         request=((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         log.info(request.getRemoteAddr()+"==========");
         model.addAttribute("ipV4",request.getRemoteAddr());
-
+        return "/main/main";
     }
 
+
+    @GetMapping("/avatar")
+    public void avatar(){
+
+    }
     @PostMapping("/qrStartLogin")
-    public void qrStartCheck(String email, String password,HttpServletRequest request,Model model){
+    public String qrStartCheck(String email, String password,HttpServletRequest request,Model model){
 
         // 이메일과 비밀번호를 통해 userDTO를 불러옴
         UserDTO userDTO=tempUserSerivce.loginUser(email, password);
@@ -118,6 +114,7 @@ public class AdminController {
         log.info("============="+userNum);
 
         QrDTO qrDTO = tempUserSerivce.getQrInfo(userNum);
+
 
         log.info(qrDTO.getUserNum() + "===================");
         log.info(qrDTO.getProjectApproval() + "===================");
@@ -134,10 +131,12 @@ public class AdminController {
 
         projectService.setApproval(projectNum,applyNum);
 
+
+
         request=((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         log.info(request.getRemoteAddr()+"==========");
         model.addAttribute("ipV4",request.getRemoteAddr());
-
+        return "/main/main";
     }
 
 
@@ -171,6 +170,11 @@ public class AdminController {
 
     }
 
+
+    @GetMapping("/wrong")
+    public void wrong(){
+
+    }
     // 관리자 메인
     @GetMapping("/main")
     public void main(Model model,OrderCriteria orderCriteria){
@@ -256,6 +260,7 @@ public class AdminController {
         for(int i = 0; i<size; i++){
             num = Long.parseLong(ajaxMsg[i]);
             tempAdminService.productQnaDelete(num);
+            tempAdminService.productQnaDelete(num);
             tempAdminService.deleteById(num);
         }
         return "/admin/boardList";
@@ -321,7 +326,7 @@ public class AdminController {
         model.addAttribute("detailVO",tempAdminService.readUserInfo(num));
 
         log.info("sssss"+tempAdminService.readUserInfo(num).toString());
-        log.info("sssss"+tempCompanyService.readCompanyInfo(num).toString());
+        log.info("sssss"+ companyService.readCompanyInfo(num).toString());
     }
 
     // 관리자 프로젝트 목록
@@ -373,18 +378,19 @@ public class AdminController {
 
         log.info("==========="+startDate);
         log.info("==========="+endDate);
-        projectVO.setCompanyNum(11l);
-        projectService.register(projectVO);
+        projectVO.setCompanyNum(21L); // 관리자 companyNum설정
+        projectService.registerProject(projectVO);
     }
 
     @GetMapping("/projectDetail")
     public void projectDetail(Long projectNum,Model model){
         model.addAttribute("applyUserList",tempAdminService.getApplyUser(projectNum));
+        model.addAttribute("projectNum",projectNum);
     }
 
     // 관리자 상품 목록
     @GetMapping("/productList")
-    public void productList(ProductCriteria productCriteria, Model model){
+    public String productList(ProductCriteria productCriteria, Model model){
             log.info("=============");
             log.info("===Product===");
             log.info("=============");
@@ -408,7 +414,7 @@ public class AdminController {
 
             model.addAttribute( "productList",tempAdminService.getProductList(productCriteria));
             model.addAttribute("productPageDTO",new ProductPageDTO(productCriteria,(tempAdminService.getTotal())));
-
+            return "/admin/productList";
     }
 
     // 관리자 상품 등록
@@ -419,10 +425,10 @@ public class AdminController {
 
     // 관리자 상품 등록
     @PostMapping("/productRegister")
-    public String productRegisterForm(ProductVO productVO){
+    public String productRegisterForm(ProductVO productVO, ProductCriteria productCriteria, Model model){
         adminProductService.register(productVO);
 
-        return "admin/productList";
+        return productList(productCriteria, model);
     }
 
     @PostMapping("/deleteProduct")
@@ -603,7 +609,7 @@ public class AdminController {
             model.addAttribute("detailVO",tempAdminService.readUserInfo(num));
         }
         if(category.equals("company")) {
-            model.addAttribute("detailVO", tempCompanyService.readCompanyInfo(num));
+            model.addAttribute("detailVO", companyService.readCompanyInfo(num));
         }
 
     }
@@ -706,7 +712,7 @@ public class AdminController {
 //        log.info("====================");
 //        return new RedirectView("/admin/boardList");
 //    }
-
+// 프로젝트 승인
     @PostMapping("/approveProject")
     @ResponseBody
     public void approveProject(Long num, HttpServletRequest request){
@@ -718,7 +724,7 @@ public class AdminController {
         }
     }
 
-
+// 프로젝트 승인 대기중
     @PostMapping("/AwaitingProject")
     @ResponseBody
     public void awaitingProject(Long num, HttpServletRequest request){
@@ -729,7 +735,7 @@ public class AdminController {
             tempAdminService.awaitProject(num);
         }
     }
-
+// 프로젝트 승인거절
     @PostMapping("/DispproveProject")
     @ResponseBody
     public void disapproveProject(Long num, HttpServletRequest request){
@@ -741,6 +747,7 @@ public class AdminController {
         }
     }
 
+    // 포인트 지급버튼을 통하여 프로젝트에 참여한 유저에게 포인트를 지급
     @PostMapping("/addPoint")
     @ResponseBody
     public void addPoint(String nickname, String point,String approach,String userNum,String applynum){
@@ -772,6 +779,28 @@ public class AdminController {
         log.info("=========="+nickname);
         log.info("===========+"+tempAdminService.readUserInfo(userNum1).getNickname());
         tempAdminService.addPoint(nickname,updatePoint,applynum1);
+    }
+
+    @GetMapping("/orderInfoDetail")
+    public void orderInfoDetail(Long orderNum,Long productNum,Model model){
+        OrderVO orderVO = tempAdminService.getOrderDetail(orderNum);
+
+        Long userNum = orderVO.getUserNum();
+
+        UserVO userVO = tempUserSerivce.readUserInfo(userNum);
+
+        ProductVO productVO = tempAdminService.getDetail(productNum);
+
+        model.addAttribute("userVO",userVO);
+        model.addAttribute("orderVO",orderVO);
+        model.addAttribute("productVO",productVO);
+    }
+
+    @PostMapping("/setDelivery")
+    @ResponseBody
+    public void setDelivery(String orderNum){
+        Long orderNum1=Long.parseLong(orderNum);
+        tempAdminService.setDelivery(orderNum1);
     }
 }
 

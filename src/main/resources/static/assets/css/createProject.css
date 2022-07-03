@@ -284,8 +284,8 @@ body {
     display: flex;
     -webkit-box-pack: center;
     justify-content: center;
+    flex: 1 1 0%;
     margin:0 120px;
-    width: 100%;
 }
 
 .cpContentForm {
@@ -293,17 +293,16 @@ body {
 }
 
 .cpContentContainer {
-    width: 100%;
+    flex: 1 1 0%;
     padding: 6px 32px 60px;
 }
 
 .basicInfoContainer {
     display: flex;
-    width: 100%;
 }
 
 .basicInfoBox {
-    width: 100%;
+    flex: 1 1 0%;
 }
 
 .basicInfoText {
@@ -319,6 +318,7 @@ body {
 
 .basicInfoSubText {
     font-family: 'Noto Sans KR', sans-serif;
+    white-space: pre-wrap;
     margin-bottom: 32px;
     font-size: 12px;
     font-weight: normal;
@@ -353,7 +353,7 @@ body {
     background-color: white;
     height: 40px;
     flex: 1 1 auto;
-    width: 61.5%;
+    width: 71%;
     padding: 0px 48px 0px 16px;
     appearance: none;
     background-repeat: no-repeat;
@@ -383,10 +383,9 @@ option {
 
 .addressForm {
     display:flex;
-    justify-content: space-between;    left: 0;
-    top: 200px;
+    justify-content: space-between;
     margin-bottom: 8px;
-    width: 62%;
+    width: 71%;
 }
 .find_address, .end_address{
     background: white;
@@ -506,7 +505,7 @@ option {
     vertical-align: middle;
     border-radius: 3px;
     color: rgb(255, 255, 255);
-    background-color: #1F89FF;
+    background-color: rgb(255, 86, 0);
     font-weight: 500;
     font-size: 14px;
     letter-spacing: -0.2px;
@@ -1371,8 +1370,7 @@ option {
 }
 
 .cpCheckBox1, .cpCheckBox2, .cpCheckBox3 {
-    width:24px;
-    height: 24px;
+    display: none;
     margin: 0;
 }
 
@@ -1459,24 +1457,10 @@ label {
 }
 
 .endTime, .startTime{
-    width: 52%;
+    width: 57%;
     margin-bottom: 7px;
 }
 
 .hidden{
     display: none;
-}
-
-#mapBox{
-    width: 400px;
-    height: 400px;
-    position: relative;
-    left: 0;
-    top: 200px;
-}
-
-.group {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
 }
