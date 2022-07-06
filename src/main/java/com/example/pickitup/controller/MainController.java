@@ -34,17 +34,19 @@ public class MainController {
         System.out.println("=============="+request.getRequestURI().split("/")[1]);
 
         if(session.getAttribute("token")!=null){
-//            log.info("tokentokentokentokentokentokentoken");
-//            log.info(session.toString());
-//            log.info((String)session.getAttribute("token"));
-//            log.info("aaaaaaaaaaaaaaaaaaaaaaaaaa");
+            log.info("tokentokentokentokentokentokentoken");
+            log.info(session.toString());
+            log.info((String)session.getAttribute("token"));
+            log.info("session num"+session.getAttribute("num"));
+            log.info("aaaaaaaaaaaaaaaaaaaaaaaaaa");
             checkLogin = 2;
         }else if(session.getAttribute("num")!=null&&session.getAttribute("nickname")!=null){
+            log.info("session num"+session.getAttribute("num"));
             checkLogin= 3;
         }else{
-//           log.info("elseelseelseelseelseelseelseelseelse");
-//           log.info(session.toString());
-//           log.info("aaaaaaaaaaaaaaaaaaaaaaaaaa");
+           log.info("elseelseelseelseelseelseelseelseelse");
+           log.info(session.toString());
+           log.info("aaaaaaaaaaaaaaaaaaaaaaaaaa");
            checkLogin= 1;
        }
         model.addAttribute("fileName",session.getAttribute("fileName"));

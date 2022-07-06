@@ -2,6 +2,7 @@ package com.example.pickitup.controller;
 
 
 import com.example.pickitup.Util.EmailSend;
+import com.example.pickitup.domain.dao.user.CompanyDAO;
 import com.example.pickitup.domain.vo.dto.MyOrderDTO;
 import com.example.pickitup.domain.vo.dto.PageDTO;
 import com.example.pickitup.domain.vo.dto.PointDTO;
@@ -250,25 +251,36 @@ public class UserController {
 //        Base64.getEncoder().encode(password.getBytes());
 
         UserDTO userDTO=tempUserSerivce.loginUser(email, password);
+        HttpSession session=request.getSession();
+
 
         if(userDTO!=null){
             rttr.addFlashAttribute("num", userDTO.getNum());
             rttr.addFlashAttribute("nickname", userDTO.getNickname());
             rttr.addFlashAttribute("category",userDTO.getCategory());
-            UserVO userVO = tempUserSerivce.readUserInfo(userDTO.getNum());
-            HttpSession session=request.getSession();
+            if(userDTO.getCategory().equals("user")){
+                UserVO userVO = tempUserSerivce.readUserInfo(userDTO.getNum());
+                session.setAttribute("num", userDTO.getNum().toString());
+                session.setAttribute("nickname", userDTO.getNickname());
+                session.setAttribute("category", userDTO.getCategory());
+                session.setAttribute("fileName", userVO.getProfileFileName());
+                session.setAttribute("uploadPath",userVO.getProfileUploadPath());
+            }else{
+                CompanyVO companyVO = tempUserSerivce.readCompanyInfo(userDTO.getNum());
+                session.setAttribute("num", userDTO.getNum().toString());
+                session.setAttribute("nickname", userDTO.getNickname());
+                session.setAttribute("category", userDTO.getCategory());
 
-            session.setAttribute("num", userDTO.getNum().toString());
-            session.setAttribute("nickname", userDTO.getNickname());
-            session.setAttribute("category", userDTO.getCategory());
-            session.setAttribute("fileName", userVO.getProfileFileName());
-            session.setAttribute("uploadPath",userVO.getProfileUploadPath());
-            log.info("사진 : " + userVO.getProfileFileName());
-            log.info("파일 경로 : " + userVO.getProfileUploadPath());
+            }
+
+
+
+//            log.info("사진 : " + userVO.getProfileFileName());
+//            log.info("파일 경로 : " + userVO.getProfileUploadPath());
             log.info(session.getAttribute("category").toString());
-
-            log.info("사진 : " + userVO.getProfileFileName());
-            log.info("파일 경로 : " + userVO.getProfileUploadPath());
+//
+//            log.info("사진 : " + userVO.getProfileFileName());
+//            log.info("파일 경로 : " + userVO.getProfileUploadPath());
 
             if(userDTO.getNickname().equals("admin")){
                 return new RedirectView("/admin/login");
