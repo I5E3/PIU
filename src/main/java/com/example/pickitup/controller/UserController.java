@@ -2,7 +2,14 @@ package com.example.pickitup.controller;
 
 
 import com.example.pickitup.Util.EmailSend;
+import com.example.pickitup.domain.dao.user.CompanyDAO;
 import com.example.pickitup.domain.vo.dto.MyOrderDTO;
+import com.example.pickitup.domain.vo.dto.PageDTO;
+import com.example.pickitup.domain.vo.dto.PointDTO;
+import com.example.pickitup.domain.vo.product.productFile.ProductVO;
+import com.example.pickitup.domain.vo.project.projectFile.ProjectVO;
+import com.example.pickitup.domain.vo.dto.PageDTO;
+import com.example.pickitup.domain.vo.dto.ReviewDTO;
 
 
 import com.example.pickitup.domain.vo.dto.UserDTO;
@@ -13,6 +20,7 @@ import com.example.pickitup.service.TempUserSerivce;
 import com.example.pickitup.service.user.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -34,7 +45,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final TempUserSerivce tempUserSerivce;
-    private final CompanyService companyService;
+    private final CompanyService tempCompanyService;
     private final OrderService orderService;
 
     @Resource
@@ -213,9 +224,10 @@ public class UserController {
     public String joinGroupForm(CompanyVO companyVO){
         companyVO.setPhone(String.join("",companyVO.getPhone().split("-")));
         companyVO.setBusinessPhone(String.join("",companyVO.getBusinessPhone().split("-")));
+
         log.info(companyVO.getPhone());
         log.info(companyVO.getBusinessPhone());
-        companyService.registerCompany(companyVO);
+        tempCompanyService.registerCompany(companyVO);
         return "/user/login";
 
     }
@@ -239,23 +251,37 @@ public class UserController {
 //        Base64.getEncoder().encode(password.getBytes());
 
         UserDTO userDTO=tempUserSerivce.loginUser(email, password);
+        HttpSession session=request.getSession();
+
 
         if(userDTO!=null){
             rttr.addFlashAttribute("num", userDTO.getNum());
             rttr.addFlashAttribute("nickname", userDTO.getNickname());
             rttr.addFlashAttribute("category",userDTO.getCategory());
-            UserVO userVO = tempUserSerivce.readUserInfo(userDTO.getNum());
-            HttpSession session=request.getSession();
-            session.setAttribute("num", userDTO.getNum().toString());
-            session.setAttribute("nickname", userDTO.getNickname());
-            session.setAttribute("category", userDTO.getCategory());
-            session.setAttribute("fileName", userVO.getProfileFileName());
-            session.setAttribute("uploadPath",userVO.getProfileUploadPath());
-            log.info("사진 : " + userVO.getProfileFileName());
-            log.info("파일 경로 : " + userVO.getProfileUploadPath());
+            if(userDTO.getCategory().equals("user")){
+                UserVO userVO = tempUserSerivce.readUserInfo(userDTO.getNum());
+                session.setAttribute("num", userDTO.getNum().toString());
+                session.setAttribute("nickname", userDTO.getNickname());
+                session.setAttribute("category", userDTO.getCategory());
+                session.setAttribute("fileName", userVO.getProfileFileName());
+                session.setAttribute("uploadPath",userVO.getProfileUploadPath());
+            }else{
+                CompanyVO companyVO = tempUserSerivce.readCompanyInfo(userDTO.getNum());
+                session.setAttribute("num", userDTO.getNum().toString());
+                session.setAttribute("nickname", userDTO.getNickname());
+                session.setAttribute("category", userDTO.getCategory());
+
+            }
+
+
+
+//            log.info("사진 : " + userVO.getProfileFileName());
+//            log.info("파일 경로 : " + userVO.getProfileUploadPath());
             log.info(session.getAttribute("category").toString());
-            log.info("사진 : " + userVO.getProfileFileName());
-            log.info("파일 경로 : " + userVO.getProfileUploadPath());
+//
+//            log.info("사진 : " + userVO.getProfileFileName());
+//            log.info("파일 경로 : " + userVO.getProfileUploadPath());
+
             if(userDTO.getNickname().equals("admin")){
                 return new RedirectView("/admin/login");
             }
@@ -288,6 +314,7 @@ public class UserController {
     public String logout(HttpSession session){
         session.invalidate();
         log.info("control");
+
         return "/user/login";
     }
 
