@@ -46,30 +46,20 @@ function checkEmail(){
 }
 
 
-
-
 $("#emailCheck").on("click",function () {
     let $uemailval = $uemail.val();
-    $.ajax({
-        url: "/userR/emailMatching",
-        type: "post",
-        data: {email: $uemailval},
-        success: function (result) {
-            if (result===0) {
-                console.log(result);
-                $('span#emailCheck_text').empty().text("사용 가능한 아이디 입니다.").css("color", "green");
-                emailPass = true;
-            } else {
-                $('span#emailCheck_text').empty().text("이미 사용 중인 아이디 입니다.").css("color", "red");
-                emailPass = false;
-            }
-        },
-        error: function (xhr, status, er) {
-            console.log(xhr, status, er);
+    joinService.emailCheck($uemailval,function (result) {
+        if (result===0) {
+            console.log(result);
+            $('span#emailCheck_text').empty().text("사용 가능한 아이디 입니다.").css("color", "green");
+            emailPass = true;
+        } else {
+            $('span#emailCheck_text').empty().text("이미 사용 중인 아이디 입니다.").css("color", "red");
+            emailPass = false;
         }
-    })
-
+    });
 })
+
 
 // 비밀번호 유효성검사
 function checkPw(){
@@ -363,22 +353,14 @@ $("input[type='file']").on("change",function () {
         if(!checkExtension(files[i].name, files[i].size)){ return; }
         formData.append("uploadFile", files[i]);
     }
-    $.ajax({
-        url: "/userFile/businessFileUpload",
-        type: "post",
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function(data){
-            console.log(data);
-            console.log(data.profileFileName);
-            console.log(data.profileUploadPath);
+   joinService.businessFileUpload(formData,function (data) {
+       console.log(data);
+       console.log(data.profileFileName);
+       console.log(data.profileUploadPath);
 
-            $('input[name=profileFileName]').val(data.profileFileName);
-            $('input[name=profileUploadPath]').val(data.profileUploadPath);
-
-        }
-    });
+       $('input[name=profileFileName]').val(data.profileFileName);
+       $('input[name=profileUploadPath]').val(data.profileUploadPath);
+   });
 
 })
 
@@ -398,4 +380,57 @@ $(document).ready(function(){
         corpPass =true;
     });
 });
+
+
+
+//모듈화-가독성과 재사용성
+let joinService=(function () {
+
+    function emailCheck(uemailval,callback,error) {
+        $.ajax({
+            url: "/userR/emailMatching",
+            type: "post",
+            data: {email: uemailval},
+            success: function (result) {
+                if(callback){
+                    callback(result);
+                }
+            },
+            error: function (xhr, status, er) {
+                if(error){
+                    error(xhr, status, er);
+                }
+                console.log(xhr, status, er);
+            }
+        })
+    }
+
+    function businessFileUpload(formData,callback,error) {
+        $.ajax({
+            url: "/userFile/businessFileUpload",
+            type: "post",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(data){
+                if(callback){
+                    callback(data)
+                }
+            },
+            error: function (xhr, status, er) {
+                if(error){
+                    error(xhr, status, er);
+                }
+                console.log(xhr, status, er);
+            }
+        });
+    }
+
+
+    return{
+        emailCheck:emailCheck,
+        businessFileUpload:businessFileUpload
+
+    }
+})();
 

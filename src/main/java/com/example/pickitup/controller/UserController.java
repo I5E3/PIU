@@ -15,7 +15,7 @@ import com.example.pickitup.domain.vo.dto.ReviewDTO;
 import com.example.pickitup.domain.vo.dto.UserDTO;
 import com.example.pickitup.domain.vo.user.CompanyVO;
 import com.example.pickitup.domain.vo.user.UserVO;
-import com.example.pickitup.service.TempCompanyService;
+import com.example.pickitup.service.CompanyService;
 import com.example.pickitup.service.TempUserSerivce;
 import com.example.pickitup.service.user.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final TempUserSerivce tempUserSerivce;
-    private final TempCompanyService tempCompanyService;
+    private final CompanyService tempCompanyService;
     private final OrderService orderService;
 
     @Resource

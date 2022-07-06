@@ -1,9 +1,8 @@
+
 package com.example.pickitup.controller;
 
-import com.example.pickitup.service.project.projectFile.ProjectFileService;
 
 import com.example.pickitup.service.ProjectService;
-import com.example.pickitup.service.project.projectFile.ProjectFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -24,7 +23,6 @@ import java.text.ParseException;
 @RequiredArgsConstructor
 public class MainController {
     private final ProjectService projectService;
-    private final ProjectFileService projectFileService;
 
 
     // 메인페이지
@@ -108,7 +106,7 @@ public class MainController {
         model.addAttribute("fileName",session.getAttribute("fileName"));
         model.addAttribute("uploadPath",session.getAttribute("uploadPath"));
         model.addAttribute("checkLogin",checkLogin);
-        
+
         String ch2  = request.getParameter("headerSearch");
         System.out.println(ch2);
         if(ch2!=null){
